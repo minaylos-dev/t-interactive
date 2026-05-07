@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-tinkoff: "Tinkoff Sans";
+  --font-neue: "Neue Haas Unica";
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #212121;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#app {
+  width: 100%;
+}
+
+@font-face {
+  font-family: "Tinkoff Sans";
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/TinkoffSans_Bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Tinkoff Sans";
+  font-weight: 500;
+  font-style: normal;
+  src: url("/fonts/TinkoffSans_Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Tinkoff Sans";
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/TinkoffSans_Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/NeueHaasUnica-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Neue Haas Unica";
+  font-weight: 500;
+  font-style: normal;
+  src: url("/fonts/NeueHaasUnica-Medium.ttf") format("truetype");
+}
