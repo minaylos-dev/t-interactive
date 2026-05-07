@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col grow items-end justify-end min-h-screen pb-48">
+    <div class="hidden flex-col grow items-end justify-end min-h-screen pb-48">
         <div class="flex w-full justify-center">
             <div class="flex items-start justify-center w-2/3 gap-10">
                 <h1 class="font-tinkoff text-white text-8xl">Название<br /> планеты</h1>
@@ -13,9 +13,16 @@
             </div>
         </div>
     </div>
+
+    <PlanetScene class="absolute inset-0 -z-10" />
+
     <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
         <RouterLink to="/">
             <p class="font-tinkoff text-white text-4xl text-center">Результат</p>
         </RouterLink>
     </div>
 </template>
+
+<script setup>
+import PlanetScene from '../components/PlanetScene.vue'
+</script>
