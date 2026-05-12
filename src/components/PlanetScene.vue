@@ -11,6 +11,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 const container = ref(null)
 
 let renderer, scene, camera, animationId, planet, pivot
+let clock
 // spherical camera orbit parameters
 let theta = 0
 let phi = Math.PI / 2
@@ -58,6 +59,9 @@ onMounted(() => {
   renderer.setSize(width, height)
   renderer.outputEncoding = THREE.sRGBEncoding
   el.appendChild(renderer.domElement)
+
+  // time source for organic motion
+  clock = new THREE.Clock()
 
   // lights
   const ambient = new THREE.AmbientLight(0xffffff, 0.05)
@@ -175,17 +179,35 @@ onMounted(() => {
   window.addEventListener('resize', onResize)
   window.addEventListener('mousemove', onMouseMove)
 
+  // Use time-based updates (dt) and time-scaled smoothing so
+  // camera interpolation and pivot rotation remain consistent
+  // across different frame rates.
   function animate() {
     animationId = requestAnimationFrame(animate)
-    // interpolate camera spherical angles towards mouse targets
-    theta += (targetTheta - theta) * 0.12
-    // faster interpolation for vertical movement
-    phi += (targetPhi - phi) * 0.18
+
+    // seconds since last frame
+    const dt = clock.getDelta()
+    if (!dt || dt <= 0) return
+
+    // exponential smoothing factor (higher = snappier)
+    const smoothing = 8.0
+    const lerpFactor = 1 - Math.exp(-smoothing * dt)
+
+    // time-based interpolation towards mouse targets
+    theta += (targetTheta - theta) * lerpFactor
+    // use a larger effective smoothing for vertical movement
+    phi += (targetPhi - phi) * lerpFactor * 1.5
     phi = THREE.MathUtils.clamp(phi, 0.1, Math.PI - 0.1)
+
     const x = radius * Math.sin(phi) * Math.cos(theta)
     const y = radius * Math.cos(phi)
     const z = radius * Math.sin(phi) * Math.sin(theta)
     camera.position.set(x, y, z)
+
+    // time-based rotation for pivot (radians per second)
+    const rotationSpeed = Math.PI * 0.05
+    if (pivot) pivot.rotation.y += rotationSpeed * dt
+
     camera.lookAt(0, 0, 0)
     renderer.render(scene, camera)
   }
