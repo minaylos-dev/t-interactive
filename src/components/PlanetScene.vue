@@ -5,6 +5,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three'
+import { createSensorGeometry } from '../renderer/trackball/sensors'
+import { createProjection } from '../renderer/trackball/transform'
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
@@ -154,6 +156,32 @@ onMounted(() => {
           pivot = new THREE.Object3D()
           pivot.add(planet)
           scene.add(pivot)
+
+          // if trackball HID is available in the preload, wire it up
+          // computeRotationVector maps [dx0,dy0,dx1,dy1,dx2,dy2] -> rotation vector
+          // (axis * angle in radians)
+          let hasTrackball = false
+          let computeRotationVector = null
+          let removeTrackListener = null
+          try {
+            if (window.trackball && typeof window.trackball.onDeltas === 'function') {
+              const sensors = createSensorGeometry()
+              computeRotationVector = createProjection(sensors)
+              hasTrackball = true
+              removeTrackListener = window.trackball.onDeltas((deltas) => {
+                if (!computeRotationVector) return
+                const rotVec = computeRotationVector(deltas, 1.0)
+                const angle = rotVec.length()
+                if (angle > 1e-8) {
+                  const axis = rotVec.clone().normalize()
+                  const dq = new THREE.Quaternion().setFromAxisAngle(axis, angle)
+                  if (planet) planet.quaternion.premultiply(dq)
+                }
+              })
+            }
+          } catch (e) {
+            // fail quietly if IPC not available
+          }
         },
         undefined,
         (err) => {
@@ -223,6 +251,9 @@ onMounted(() => {
       if (renderer.domElement && renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
     }
     if (pivot && pivot.parent) pivot.parent.remove(pivot)
+    try {
+      if (removeTrackListener) removeTrackListener()
+    } catch (e) { }
     scene = null
     camera = null
     planet = null

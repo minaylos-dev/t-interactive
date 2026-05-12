@@ -1,2 +1,9 @@
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
+const { contextBridge, ipcRenderer } = require('electron')
+
+contextBridge.exposeInMainWorld('trackball', {
+	onDeltas: (cb) => {
+		const listener = (event, deltas) => cb(deltas)
+		ipcRenderer.on('sensor-deltas', listener)
+		return () => ipcRenderer.removeListener('sensor-deltas', listener)
+	}
+})
