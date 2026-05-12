@@ -1,0 +1,12 @@
+[
+  {
+    "id": "q1",
+    "text": "Which area interests you the most?",
+    "variants": [
+      { "id": "v1", "text": "Business" },
+      { "id": "v2", "text": "Technology" },
+      { "id": "v3", "text": "Science" },
+      { "id": "v4", "text": "Art & Creativity" }
+    ]
+  }
+]

@@ -27,6 +27,7 @@
  */
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 import Home from './views/Home.vue';
@@ -45,7 +46,10 @@ const router = createRouter({
   routes
 });
 
-createApp(App).use(router).mount('#app');
+const app = createApp(App)
+app.use(createPinia())
+app.use(router)
+app.mount('#app')
 
 console.log(
   '👋 This message is being logged by "renderer.js", included via Vite',
