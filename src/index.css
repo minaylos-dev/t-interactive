@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-tinkoff: "Tinkoff Sans";
+  --font-tinkoff: "T-Sans";
   --font-neue: "Neue Haas Unica";
 }
 
@@ -23,36 +23,22 @@ body {
 }
 
 @font-face {
-  font-family: "Tinkoff Sans";
+  font-family: "T-Sans";
   font-weight: 700;
   font-style: normal;
-  src: url("/fonts/TinkoffSans_Bold.otf") format("opentype");
+  src: url("/fonts/T-Sans_Bold.otf") format("opentype");
 }
 
 @font-face {
-  font-family: "Tinkoff Sans";
+  font-family: "T-Sans";
   font-weight: 500;
   font-style: normal;
-  src: url("/fonts/TinkoffSans_Medium.otf") format("opentype");
+  src: url("/fonts/T-Sans_Medium.otf") format("opentype");
 }
 
 @font-face {
-  font-family: "Tinkoff Sans";
+  font-family: "T-Sans";
   font-weight: 400;
   font-style: normal;
-  src: url("/fonts/TinkoffSans_Regular.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "Neue Haas Unica";
-  font-weight: 400;
-  font-style: normal;
-  src: url("/fonts/NeueHaasUnica-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Neue Haas Unica";
-  font-weight: 500;
-  font-style: normal;
-  src: url("/fonts/NeueHaasUnica-Medium.ttf") format("truetype");
+  src: url("/fonts/T-Sans_Regular.otf") format("opentype");
 }
