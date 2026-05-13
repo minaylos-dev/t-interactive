@@ -36,9 +36,9 @@ import Result from './views/Result.vue';
 import './index.css';
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/quiz', component: Quiz },
-  { path: '/result', component: Result },
+  { path: '/', component: Result },
+  // { path: '/quiz', component: Quiz },
+  // { path: '/result', component: Result },
 ];
 
 const router = createRouter({
