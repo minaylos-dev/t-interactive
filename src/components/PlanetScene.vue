@@ -108,7 +108,7 @@ onMounted(() => {
           const size = new THREE.Vector3()
           box2.getSize(size)
           const maxDim = Math.max(size.x, size.y, size.z)
-          const scale = 1.5 / (maxDim || 1)
+          const scale = 2.1 / (maxDim || 1)
           planet.scale.setScalar(scale)
           planet.position.set(0, 0, 0)
 

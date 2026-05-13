@@ -28,7 +28,7 @@ const container = ref(null)
 .circle-viewport {
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.02) inset;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1) inset;
     background: transparent;
     pointer-events: auto; /* enable interactions inside the circle */
     display: block;

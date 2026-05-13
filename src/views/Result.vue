@@ -1,26 +1,22 @@
 <template>
-    <div class="hidden flex-col grow items-end justify-end min-h-screen pb-48">
-        <div class="flex w-full justify-center">
+    <div class="flex-col grow items-center justify-center min-h-screen pb-48">
+        <div class="flex flex-col w-full h-full justify-end items-center min-h-screen pb-28 gap-20">
             <div class="flex items-start justify-center w-2/3 gap-10">
-                <h1 class="font-tinkoff text-white text-3xl">Название<br /> планеты</h1>
-                <p class="font-tinkoff text-white text-lg">
-                    Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Eaque quidem cupiditate nihil, aperiam quaerat quibusdam! Qui assumenda temporibus
-                    magni modi veritatis Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis quibusdam
-                    esse porro vitae veniam voluptates vel ipsum iusto, at ex modi voluptas labore sapiente quisquam
-                    illo eos fuga quod. Nemo!
+                <h1 class="font-tinkoff text-white text-3xl font-medium">Обскура</h1>
+                <p class="font-tinkoff text-white text-lg font-normal">
+                    Сбылось пророчество Оскара Уайльда: машины взяли на себя всё, и человек занялся творчеством.
+                    Экономика автоматизирована на 97%, и почти каждый житель планеты считает себя художником или
+                    творцом. Все живут на базовый доход, но 3% занятых в реальном производстве контролируют то, от чего
+                    зависят остальные
                 </p>
             </div>
+            <RouterLink to="/">
+                <p class="font-tinkoff text-white text-2xl text-center">Результат</p>
+            </RouterLink>
         </div>
     </div>
 
-    <PlanetScene class="absolute inset-0 -z-10" />
-
-    <div class="absolute bottom-20 left-1/2 -translate-x-1/2">
-        <RouterLink to="/">
-            <p class="font-tinkoff text-white text-2xl text-center">Результат</p>
-        </RouterLink>
-    </div>
+    <PlanetScene class="absolute inset-0 -z-10 -translate-x-[15%] -translate-y-[27%]" />
 </template>
 
 <script setup>
