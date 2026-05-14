@@ -1,5 +1,8 @@
+.template-block {
+}
+
 <template>
-    <div ref="container" class="circle-wrap">
+    <div ref="container" class="circle-wrap" :style="wrapStyle">
         <div class="circle-viewport" :style="{ width: size, height: size }">
             <slot />
         </div>
@@ -7,12 +10,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import transformConfig from '../config/uniform-transform.json'
+
 const props = defineProps({
     // size can be CSS unit string like '90vmin' or '600px'
-    size: { type: String, default: '90vmin' }
+    size: { type: String, default: '508px' }
 })
 const container = ref(null)
+
+const scaleVal = Number(transformConfig.scale ?? 1)
+const offsetX = Number(transformConfig.offset?.x ?? 0)
+const offsetY = Number(transformConfig.offset?.y ?? 0)
+
+const wrapStyle = computed(() => ({
+    transform: `translate(${offsetX}px, ${offsetY}px) scale(${scaleVal})`,
+    transformOrigin: 'center center'
+}))
 </script>
 
 <style scoped>
