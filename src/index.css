@@ -15,6 +15,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-tinkoff);
 }
 
 
@@ -26,19 +27,19 @@ body {
   font-family: "T-Sans";
   font-weight: 700;
   font-style: normal;
-  src: url("/fonts/T-Sans_Bold.otf") format("opentype");
+  src: url("./assets/fonts/T-Sans_Bold.otf") format("opentype");
 }
 
 @font-face {
   font-family: "T-Sans";
   font-weight: 500;
   font-style: normal;
-  src: url("/fonts/T-Sans_Medium.otf") format("opentype");
+  src: url("./assets/fonts/T-Sans_Medium.otf") format("opentype");
 }
 
 @font-face {
   font-family: "T-Sans";
   font-weight: 400;
   font-style: normal;
-  src: url("/fonts/T-Sans_Regular.otf") format("opentype");
+  src: url("./assets/fonts/T-Sans_Regular.otf") format("opentype");
 }
