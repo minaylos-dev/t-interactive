@@ -34,6 +34,52 @@ function onMouseMove(e) {
   targetPhi = Math.PI / 2 + my * 0.9
 }
 
+const onWebsocketData = (evt) => {
+  console.log('Received gesture event:', evt)
+  try {
+    const g = evt && evt.detail
+    if (!g) return
+
+    // gesture: { axis: 'x'|'y'|'z', dir: 1|-1, value }
+    const speed = Math.PI * 0.12
+    switch (g.axis) {
+      case 'x':
+      case 'z':
+        // rotate horizontally
+        targetTheta += (g.dir || 1) * speed
+        break
+      case 'y':
+        // tilt camera up/down
+        targetPhi += -(g.dir || 1) * 0.25
+        targetPhi = THREE.MathUtils.clamp(targetPhi, 0.1, Math.PI - 0.1)
+        break
+      default:
+        break
+    }
+  } catch (e) {
+    // ignore handler errors
+  }
+}
+
+const onTrackballMove = (evt) => {
+  try {
+    const d = evt?.detail
+    if (!d || !pivot) return
+
+    const rx = THREE.MathUtils.degToRad(d.wx / 30)
+    const ry = THREE.MathUtils.degToRad(d.wy / 30)
+    const rz = THREE.MathUtils.degToRad(d.wz / 30)
+
+    // 👉 применяем как мировое вращение
+    pivot.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), rx)
+    pivot.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), ry)
+    pivot.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), rz)
+
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 onMounted(() => {
   const el = container.value
   if (!el) return
@@ -177,7 +223,12 @@ onMounted(() => {
   }
 
   window.addEventListener('resize', onResize)
-  window.addEventListener('mousemove', onMouseMove)
+  // listen for gestures coming from the renderer websocket
+  // window.addEventListener('trackball-gesture', onWebsocketData)
+  // listen for raw trackball moves (no cooldowns)
+  window.addEventListener('trackball-move', onTrackballMove)
+  // window.addEventListener('mousemove', onMouseMove)
+
 
   // Use time-based updates (dt) and time-scaled smoothing so
   // camera interpolation and pivot rotation remain consistent
@@ -205,8 +256,8 @@ onMounted(() => {
     camera.position.set(x, y, z)
 
     // time-based rotation for pivot (radians per second)
-    const rotationSpeed = Math.PI * 0.05
-    if (pivot) pivot.rotation.y += rotationSpeed * dt
+    const rotationSpeed = Math.PI * 0.0005
+    // if (pivot) pivot.rotation.y += rotationSpeed * dt
 
     camera.lookAt(0, 0, 0)
     renderer.render(scene, camera)
@@ -216,6 +267,8 @@ onMounted(() => {
 
   onUnmounted(() => {
     window.removeEventListener('resize', onResize)
+    window.removeEventListener('trackball-gesture', onWebsocketData)
+    window.removeEventListener('trackball-move', onTrackballMove)
     window.removeEventListener('mousemove', onMouseMove)
     if (animationId) cancelAnimationFrame(animationId)
     if (renderer) {
