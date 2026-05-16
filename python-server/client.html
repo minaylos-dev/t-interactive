@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>WebSocket Client</title>
+  </head>
+  <body>
+    <h3>WebSocket Test Client</h3>
+    <div id="status">Disconnected</div>
+    <button id="connect">Connect</button>
+    <button id="send">Send Message</button>
+    <pre id="log"></pre>
+
+    <script>
+      let ws;
+      const log = msg => document.getElementById('log').textContent += msg + '\n';
+
+      document.getElementById('connect').onclick = () => {
+        ws = new WebSocket('ws://localhost:8765');
+        ws.onopen = () => { document.getElementById('status').textContent = 'Connected'; log('Connected'); };
+        ws.onmessage = (e) => log('Server: ' + e.data);
+        ws.onclose = () => { document.getElementById('status').textContent = 'Disconnected'; log('Disconnected'); };
+      };
+
+      document.getElementById('send').onclick = () => {
+        if (!ws || ws.readyState !== WebSocket.OPEN) { log('Not connected'); return; }
+        const msg = 'Hello from client at ' + new Date().toLocaleTimeString();
+        ws.send(msg);
+        log('You: ' + msg);
+      };
+    </script>
+  </body>
+</html>
