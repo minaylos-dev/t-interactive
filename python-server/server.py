@@ -38,7 +38,7 @@ async def handler(websocket, path=None):
         CONNECTED.discard(websocket)
 
 
-async def broadcast_loop(trackball, interval=1/60):
+async def broadcast_loop(trackball, interval=1/100):
     buffer = {}
     while True:
         if trackball is not None:

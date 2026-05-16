@@ -76,6 +76,14 @@ SENSOR_FLIPS = [
     (+1, +1),   # sensor 2
 ]
 
+# Когда суммарное движение по всем мышкам ниже порога — считаем что шар стоит,
+# и мгновенно обнуляем сглаженную ω. Убирает "инерционный доезд" после остановки.
+SNAP_TO_ZERO_THRESHOLD = 1.0   # суммарная норма raw-измерений, отсчётов
+
+# Deadzone на выходе. Ниже порога считаем что движения нет — обнуляем out.
+# Убивает мелкий джиттер на покое и не даёт ему интегрироваться в матрицу.
+DEADZONE_DEG_PER_SEC = 0.1
+
 # Перестановка и знак выходных осей. На входе - вектор ω = (wx, wy, wz)
 # из решателя. На выходе - (rx, ry, rz), уходящие в OSC.
 # Identity = [(0,+1), (1,+1), (2,+1)]
@@ -520,8 +528,18 @@ class Trackball3Axis:
                     raw_per_sensor.append((dx, dy))
 
                 raw = self.solve(meas)
-                self.omega_body = self.alpha * self.omega_body + (1-self.alpha) * raw
+
+                # Асимметричное сглаживание: при движении — EMA, при остановке — мгновенный сброс.
+                if np.linalg.norm(meas) < SNAP_TO_ZERO_THRESHOLD:
+                    self.omega_body = np.zeros(3)                                  # без инерции
+                else:
+                    self.omega_body = self.alpha * self.omega_body + (1-self.alpha) * raw
+
                 out = self._apply_output_transform(self.omega_body)
+
+                # Deadzone: подавляет мелкий шум на выходе. Применяется ДО интегрирования,
+                # чтобы под-пороговые значения не накапливались в матрице вращения.
+                out = np.where(np.abs(out) < DEADZONE_DEG_PER_SEC, 0.0, out)
 
                 # Интегрирование нужно только тем режимам, что его используют.
                 if self.debug_mode in ("off", "integrate"):
@@ -631,8 +649,8 @@ class Trackball:
             output_remap=OUTPUT_REMAP,
             output_scale=OUTPUT_SCALE,
             output_scale_xyz=OUTPUT_SCALE_XYZ,
-            output_rate_hz=30,
-            smoothing=0.75,
+            output_rate_hz=100,
+            smoothing=0.9,
             max_raw_delta=MAX_RAW_DELTA,
             solver_robust=SOLVER_ROBUST,
             solver_outlier_factor=SOLVER_OUTLIER_FACTOR,
@@ -681,7 +699,7 @@ if __name__ == "__main__":
     # "axes"       — этап 3: крутим вокруг X/Y/Z и видим, какая ось отзывается
     # "integrate"  — этап 4: считаем оборот шара, проверяем масштаб
     # "off"        — тишина (фактически ничего не делает, если нет callback)
-    MODE = "axes"
+    MODE = "raw"
 
     # list_devices(); exit()
 
